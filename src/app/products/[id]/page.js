@@ -1,12 +1,11 @@
 "use client";
+import Loading from "@/components/Loading";
 import { useSession } from "next-auth/react";
 import Image from "next/image";
 import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import Swal from "sweetalert2";
-import Footer from "../../../components/Footer";
-import Navbar from "../../../components/Navbar";
 
 export default function ProductDetailPage() {
   const [product, setProduct] = useState(null);
@@ -102,21 +101,13 @@ export default function ProductDetailPage() {
   };
 
   if (loading) {
-    return (
-      <div className="min-h-screen bg-zinc-900 text-zinc-100">
-        <Navbar />
-        <div className="flex justify-center items-center h-[60vh]">
-          <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-indigo-500" />
-        </div>
-      </div>
-    );
+    return <Loading />
   }
 
   if (error || !product) {
     return (
-      <div className="min-h-screen bg-zinc-900 text-zinc-100">
-        <Navbar />
-        <div className="container mx-auto px-4 py-20 text-center">
+      <div className="min-h-screen flex items-center justify-center bg-zinc-900 text-zinc-100">
+        <div className="container bg-zinc-700 w-fit h-fit mx-auto p-9 pb-10 rounded-2xl text-center">
           <h1 className="text-3xl font-bold mb-4">Product Not Found</h1>
           <p className="text-zinc-400 mb-8">
             The product you&apos;re looking for doesn&apos;t exist.
@@ -128,21 +119,19 @@ export default function ProductDetailPage() {
             Back to Products
           </Link>
         </div>
-        <Footer />
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-zinc-900 text-zinc-100">
-      <Navbar />
+    <div className="min-h-screen bg-zinc-900 text-zinc-100 pt-20">
       {/* Product Detail Section */}
       <section className="py-20">
         <div className="container mx-auto px-4">
           <div className="mb-8">
             <Link
               href="/products"
-              className="inline-flex items-center text-indigo-400 hover:text-indigo-300 transition-colors"
+              className="inline-flex items-center text-indigo-400 hover:text-indigo-300 font-clash-display font-semibold text-xl transition-colors"
             >
               <svg
                 className="w-5 h-5 mr-2"
@@ -168,7 +157,7 @@ export default function ProductDetailPage() {
             </div>
             {/* Product Details */}
             <div>
-              <h1 className="text-3xl md:text-4xl font-bold mb-4">{product.name}</h1>
+              <h1 className="text-3xl md:text-4xl font-semibold mb-4">{product.name}</h1>
               <p className="text-xl text-indigo-400 font-bold mb-6">${Number(product.price || 0).toFixed(2)}</p>
               <div className="mb-8">
                 <h2 className="text-xl font-semibold mb-3">Description</h2>
@@ -249,8 +238,6 @@ export default function ProductDetailPage() {
           )}
         </div>
       </section>
-
-      <Footer />
     </div>
   );
 }

@@ -38,20 +38,8 @@ export default function Login() {
 
   return (
     <div className="min-h-screen bg-zinc-900 text-zinc-100 flex flex-col">
-      {/* Navbar */}
-      <nav className="py-6 px-4 sm:px-6 lg:px-8">
-        <div className="max-w-7xl mx-auto">
-          <Link
-            href="/"
-            className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-indigo-400 to-purple-500"
-          >
-            imaginary
-          </Link>
-        </div>
-      </nav>
-
       {/* Main login card */}
-      <div className="flex-grow flex items-center justify-center px-4 sm:px-6 lg:px-8 py-12">
+      <div className="flex-grow flex items-center justify-center px-4 sm:px-6 lg:px-8 pt-32 pb-20">
         <div className="max-w-md w-full space-y-8">
           <div className="text-center">
             <h1 className="text-4xl font-extrabold mb-2 bg-clip-text text-transparent bg-gradient-to-r from-indigo-400 to-purple-500">

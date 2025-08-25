@@ -1,4 +1,4 @@
-export default function Loading() {
+export default function loading() {
   return (
     <div className="min-h-screen bg-zinc-900 text-zinc-100">
       <div className="flex justify-center items-center h-screen">

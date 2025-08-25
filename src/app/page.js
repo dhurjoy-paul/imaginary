@@ -1,12 +1,8 @@
 "use client";
-import { signIn } from "next-auth/react";
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import Swal from "sweetalert2";
-import Footer from "../components/Footer";
 import Loading from "../components/Loading";
-import Navbar from "../components/Navbar";
 
 export default function Home() {
   const [products, setProducts] = useState([]);
@@ -57,28 +53,11 @@ export default function Home() {
     fetchProducts();
   }, []);
 
-  const handleLogin = () => {
-    Swal.fire({
-      title: "Login with Google",
-      text: "You&apos;ll be redirected to Google for authentication",
-      icon: "info",
-      showCancelButton: true,
-      confirmButtonColor: "#6366f1",
-      cancelButtonColor: "#3f3f46",
-      confirmButtonText: "Continue",
-      background: "#18181b",
-      color: "#f4f4f5",
-    }).then((result) => {
-      if (result.isConfirmed) signIn("google", { callbackUrl: "/" });
-    });
-  };
-
   if (!isMounted || loading) return <Loading />;
 
   return (
     <div className="min-h-screen bg-zinc-900 text-zinc-100">
-      <Navbar />
-
+      <div className="h-20 bg-zinc-800" />
       {/* Hero Section */}
       <section className="relative py-20 md:py-32 pt-28 md:pt-40 overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-br from-zinc-800 to-zinc-900" />
@@ -86,12 +65,12 @@ export default function Home() {
           src="https://images.unsplash.com/photo-1523240795612-9a054b0db644?auto=format&fit=crop&w=1950&q=80"
           alt="Hero background"
           fill
-          className="object-cover opacity-20 absolute inset-0"
+          className="object-cover opacity-25 absolute inset-0"
           priority
         />
         <div className="container mx-auto px-4 relative z-10 text-center">
-          <h1 className="text-4xl md:text-6xl font-bold mb-6 bg-clip-text text-transparent bg-gradient-to-r from-indigo-400 to-purple-500">
-            Discover Premium Products
+          <h1 className="text-4xl md:text-6xl font-semibold mb-6 text-zinc-100 tracking-wider font-clash-display">
+            Discover Premium <br /> Products
           </h1>
           <p className="text-lg md:text-xl text-zinc-300 mb-10 max-w-2xl mx-auto">
             Curated selection of high-quality items at unbeatable prices. Elevate your lifestyle with our exclusive collection.
@@ -116,6 +95,9 @@ export default function Home() {
 
       {/* Featured Products */}
       <section className="py-20 bg-zinc-800/50">
+        <h1 className="text-3xl md:text-4xl font-bold mb-15 text-white text-center">
+          Collect latest deals
+        </h1>
         <div className="container mx-auto px-4">
           {error && (
             <div className="text-center py-10 text-red-400">
@@ -154,10 +136,14 @@ export default function Home() {
               ))}
           </div>
         </div>
+        <div className="flex items-center justify-center mt-15">
+          <Link href="/products"
+            className="bg-indigo-600 hover:bg-indigo-700 text-white px-5 py-3 rounded-md text-base transition-colors"
+          >
+            Browse more
+          </Link>
+        </div>
       </section>
-
-      {/* Footer */}
-      <Footer />
     </div>
   );
 }

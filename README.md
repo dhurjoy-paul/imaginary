@@ -1,18 +1,16 @@
-# Imaginary Store 🛒
+# imaginary Store 🛒
 
-A simple **Next.js 15** (App Router) project with **MongoDB** integration.  
+A simple **Next.js 15.5.0** (App Router) project with **MongoDB** integration.  
 This app demonstrates how to fetch products from MongoDB and display them on the frontend using API routes.
-
----
 
 ## 🚀 Features
 
-- Next.js 15 (with Turbopack)
-- MongoDB Atlas connection via `lib/mongodb.js`
-- REST API routes (`/api/products`, `/api/products/random`)
-- Product listing with formatted prices
-
----
+- Used **NEXT Auth** for secure authentication
+- **MongoDB** was used as a Database
+- Product adding page is **protected**
+- Users will get **real-time** product buying feel across the site
+- Related product suggestions
+- Used **NEXT.JS** also for backend
 
 ## ⚙️ Setup & Installation
 
@@ -27,8 +25,11 @@ npm install
 Create a .env.local file in the root of your project:
 
 ```
-MONGODB_URI=your-mongodb-atlas-connection-string
-MONGODB_DB=imaginaryDB
+NEXTAUTH_SECRET=<your random code>
+GOOGLE_CLIENT_ID=<google client id>
+GOOGLE_CLIENT_SECRET=<google client secret>
+MONGODB_URI=<which contains admin, password and db name>
+MONGODB_DB=<db name>
 ```
 
 Start Development Server
@@ -39,33 +40,9 @@ npm run dev
 
 ---
 
-## 📦 Project Structure
-
-```
-src/
-├─ app/
-│ ├─ api/
-│ │ └─ products/
-│ │ ├─ route.js # GET all products
-│ │ └─ random/route.js # GET one random product
-│ └─ page.js # Homepage
-└─ lib/
-└─ mongodb.js # MongoDB connection
-```
-
 ## 🌐 Route Summary
 
-### API Routes
-
-```
-GET /api/products
-→ Returns all products from MongoDB.
-
-GET /api/products/random
-→ Returns one random product.
-```
-
-### Pages
+### Pages Routes
 
 ```
 /
@@ -73,4 +50,71 @@ GET /api/products/random
 
 /products
 → All products
+
+/dashboard/add-product
+→ Add product
+
+/login
+→ Login page
+```
+
+### API Routes
+
+```
+GET /api/products
+→ Returns all products from MongoDB.
+
+GET /api/products/:id
+→ Returns single matched product from MongoDB.
+
+GET /api/products/random
+→ Returns random product(s).
+
+POST /api/products
+→ Adds product to MongoDB.
+```
+
+## 📦 Project Structure
+
+```
+imaginary
+├─ jsconfig.json
+├─ next.config.mjs
+├─ package-lock.json
+├─ package.json
+├─ public
+├─ README.md
+└─ src
+   ├─ app
+   │  ├─ api
+   │  │  ├─ auth
+   │  │  │  └─ [...nextauth]
+   │  │  │     └─ route.js
+   │  │  └─ products
+   │  │     ├─ random
+   │  │     │  └─ route.js
+   │  │     ├─ route.js
+   │  │     └─ [id]
+   │  │        └─ route.js
+   │  ├─ dashboard
+   │  │  └─ add-product
+   │  │     └─ page.js
+   │  ├─ favicon.ico
+   │  ├─ globals.css
+   │  ├─ layout.js
+   │  ├─ login
+   │  │  └─ page.js
+   │  ├─ page.js
+   │  ├─ products
+   │  │  ├─ page.js
+   │  │  └─ [id]
+   │  │     └─ page.js
+   │  └─ providers.js
+   ├─ components
+   │  ├─ Footer.js
+   │  ├─ Loading.js
+   │  └─Navbar.js
+   └─ lib
+      └─ mongodb.js
+
 ```

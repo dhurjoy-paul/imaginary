@@ -12,3 +12,8 @@ body {
   background: var(--bg);
   color: var(--fg);
 }
+
+@theme {
+  --font-clash-display: "Clash Display", sans-serif;
+  --font-merryWeather: "Merriweather", serif;
+}

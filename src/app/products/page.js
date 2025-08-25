@@ -1,9 +1,8 @@
 "use client";
+import Loading from "@/components/Loading";
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import Footer from "../../components/Footer";
-import Navbar from "../../components/Navbar";
 
 export default function ProductsPage() {
   const [products, setProducts] = useState([]);
@@ -31,22 +30,13 @@ export default function ProductsPage() {
   }, []);
 
   if (!isMounted || loading) {
-    return (
-      <div className="min-h-screen bg-zinc-900 text-zinc-100">
-        <Navbar />
-        <div className="flex justify-center items-center h-[60vh]">
-          <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-indigo-500"></div>
-        </div>
-      </div>
-    );
+    return <Loading />
   }
 
   return (
     <div className="min-h-screen bg-zinc-900 text-zinc-100">
-      <Navbar />
-
       {/* Products Section */}
-      <section className="py-20 pt-28 bg-zinc-800/50">
+      <section className="py-20 pt-36 bg-zinc-800/50">
         <div className="container mx-auto px-4">
           <div className="text-center mb-16">
             <h2 className="text-3xl md:text-4xl font-bold mb-4">All Products</h2>
@@ -89,8 +79,6 @@ export default function ProductsPage() {
           </div>
         </div>
       </section>
-
-      <Footer />
     </div>
   );
 }

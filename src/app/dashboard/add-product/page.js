@@ -1,10 +1,9 @@
 "use client";
+import Loading from "@/components/Loading";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import Swal from "sweetalert2";
-import Footer from "../../../components/Footer";
-import Navbar from "../../../components/Navbar";
 
 export default function AddProductPage() {
   const { data: session, status } = useSession();
@@ -81,27 +80,19 @@ export default function AddProductPage() {
   };
 
   if (status === "loading") {
-    return (
-      <div className="min-h-screen bg-zinc-900 text-zinc-100">
-        <Navbar />
-        <div className="flex justify-center items-center h-[60vh]">
-          <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-indigo-500"></div>
-        </div>
-      </div>
-    );
+    return <Loading />
   }
 
   if (status === "unauthenticated") return null;
 
   return (
     <div className="min-h-screen bg-zinc-900 text-zinc-100">
-      <Navbar />
 
-      <section className="py-20">
+      <section className="py-20 pt-32">
         <div className="container mx-auto px-4">
           <div className="max-w-3xl mx-auto">
-            <h1 className="text-3xl md:text-4xl font-bold mb-6">Add New Product</h1>
-            <p className="text-zinc-400 mb-8">Fill in the details below to add a new product to the store.</p>
+            <h1 className="text-3xl md:text-4xl font-bold mb-6 text-center">Add New Product</h1>
+            <p className="text-zinc-400 mb-8 text-center">Fill in the details below to add a new product to the store.</p>
 
             <form onSubmit={handleSubmit} className="space-y-6">
               {/** Product Name */}
@@ -202,7 +193,6 @@ export default function AddProductPage() {
           </div>
         </div>
       </section>
-      <Footer />
     </div>
   );
 }

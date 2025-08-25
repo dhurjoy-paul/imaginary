@@ -1,7 +1,7 @@
 # imaginary Store 🛒
 
 A simple **Next.js 15.5.0** (App Router) project with **MongoDB** integration.  
-This app demonstrates how to fetch products from MongoDB and display them on the frontend using API routes.
+On this web app, users can buy their favorite products and also showcase new products for sale.
 
 ## 🚀 Features
 

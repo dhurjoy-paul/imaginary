@@ -1,4 +1,5 @@
 "use client";
+import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import Footer from "../../components/Footer";
@@ -16,6 +17,7 @@ export default function ProductsPage() {
       try {
         setLoading(true);
         const response = await fetch("/api/products");
+        if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
         const data = await response.json();
         setProducts(data);
       } catch (error) {
@@ -28,15 +30,7 @@ export default function ProductsPage() {
     fetchProducts();
   }, []);
 
-  if (!isMounted) {
-    return (
-      <div className="min-h-screen bg-zinc-900">
-        <Navbar />
-      </div>
-    );
-  }
-
-  if (loading) {
+  if (!isMounted || loading) {
     return (
       <div className="min-h-screen bg-zinc-900 text-zinc-100">
         <Navbar />
@@ -63,12 +57,16 @@ export default function ProductsPage() {
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {products.map((product) => (
-              <div key={product._id} className="bg-zinc-800 rounded-2xl overflow-hidden transition-all duration-300 hover:shadow-xl hover:-translate-y-2">
-                <div className="h-48 overflow-hidden">
-                  <img
-                    src={product.image}
+              <div
+                key={product._id}
+                className="bg-zinc-800 rounded-2xl overflow-hidden transition-all duration-300 hover:shadow-xl hover:-translate-y-2"
+              >
+                <div className="h-48 overflow-hidden relative">
+                  <Image
+                    src={product.image || "/placeholder.png"}
                     alt={product.name}
-                    className="w-full h-full object-cover transition-transform duration-500 hover:scale-110"
+                    fill
+                    className="object-cover transition-transform duration-500 hover:scale-110"
                   />
                 </div>
                 <div className="p-6">
@@ -76,13 +74,14 @@ export default function ProductsPage() {
                   <p className="text-zinc-400 mb-4">{product.description}</p>
                   <div className="flex justify-between items-center">
                     <span className="text-xl font-bold text-indigo-400">
-                      ${Number(product.price).toFixed(2)}
+                      ${Number(product.price || 0).toFixed(2)}
                     </span>
-                    <div className="flex space-x-2">
-                      <Link href={`/products/${product._id}`} className="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 rounded-lg transition-colors">
-                        View Details
-                      </Link>
-                    </div>
+                    <Link
+                      href={`/products/${product._id}`}
+                      className="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 rounded-lg transition-colors"
+                    >
+                      View Details
+                    </Link>
                   </div>
                 </div>
               </div>
@@ -91,7 +90,6 @@ export default function ProductsPage() {
         </div>
       </section>
 
-      {/* Footer */}
       <Footer />
     </div>
   );

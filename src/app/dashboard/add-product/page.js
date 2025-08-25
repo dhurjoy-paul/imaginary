@@ -9,6 +9,7 @@ import Navbar from "../../../components/Navbar";
 export default function AddProductPage() {
   const { data: session, status } = useSession();
   const router = useRouter();
+
   const [formData, setFormData] = useState({
     name: "",
     description: "",
@@ -18,6 +19,7 @@ export default function AddProductPage() {
   });
   const [loading, setLoading] = useState(false);
 
+  // Redirect unauthenticated users
   useEffect(() => {
     if (status === "unauthenticated") {
       router.push("/login");
@@ -26,10 +28,7 @@ export default function AddProductPage() {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData(prev => ({
-      ...prev,
-      [name]: value
-    }));
+    setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
   const handleSubmit = async (e) => {
@@ -39,20 +38,14 @@ export default function AddProductPage() {
     try {
       const response = await fetch("/api/products", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formData)
       });
 
-      if (!response.ok) {
-        throw new Error("Failed to add product");
-      }
+      if (!response.ok) throw new Error("Failed to add product");
 
-      const data = await response.json();
-
-      // Show success message
-      Swal.fire({
+      // Success message
+      await Swal.fire({
         title: "Success!",
         text: "Product added successfully!",
         icon: "success",
@@ -70,13 +63,11 @@ export default function AddProductPage() {
         details: ""
       });
 
-      // Optionally redirect to products page
+      // Optional redirect
       // router.push("/products");
     } catch (error) {
       console.error("Error adding product:", error);
-
-      // Show error message
-      Swal.fire({
+      await Swal.fire({
         title: "Error!",
         text: "Failed to add product. Please try again.",
         icon: "error",
@@ -100,9 +91,7 @@ export default function AddProductPage() {
     );
   }
 
-  if (status === "unauthenticated") {
-    return null; // Will redirect in useEffect
-  }
+  if (status === "unauthenticated") return null;
 
   return (
     <div className="min-h-screen bg-zinc-900 text-zinc-100">
@@ -115,10 +104,9 @@ export default function AddProductPage() {
             <p className="text-zinc-400 mb-8">Fill in the details below to add a new product to the store.</p>
 
             <form onSubmit={handleSubmit} className="space-y-6">
+              {/** Product Name */}
               <div>
-                <label htmlFor="name" className="block text-sm font-medium mb-2">
-                  Product Name
-                </label>
+                <label htmlFor="name" className="block text-sm font-medium mb-2">Product Name</label>
                 <input
                   type="text"
                   id="name"
@@ -126,15 +114,14 @@ export default function AddProductPage() {
                   value={formData.name}
                   onChange={handleChange}
                   required
-                  className="w-full px-4 py-3 bg-zinc-800 border border-zinc-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
                   placeholder="Enter product name"
+                  className="w-full px-4 py-3 bg-zinc-800 border border-zinc-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
                 />
               </div>
 
+              {/** Short Description */}
               <div>
-                <label htmlFor="description" className="block text-sm font-medium mb-2">
-                  Short Description
-                </label>
+                <label htmlFor="description" className="block text-sm font-medium mb-2">Short Description</label>
                 <textarea
                   id="description"
                   name="description"
@@ -142,15 +129,14 @@ export default function AddProductPage() {
                   onChange={handleChange}
                   required
                   rows={3}
-                  className="w-full px-4 py-3 bg-zinc-800 border border-zinc-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
                   placeholder="Enter a short description"
+                  className="w-full px-4 py-3 bg-zinc-800 border border-zinc-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
                 ></textarea>
               </div>
 
+              {/** Price */}
               <div>
-                <label htmlFor="price" className="block text-sm font-medium mb-2">
-                  Price ($)
-                </label>
+                <label htmlFor="price" className="block text-sm font-medium mb-2">Price ($)</label>
                 <input
                   type="number"
                   id="price"
@@ -160,15 +146,14 @@ export default function AddProductPage() {
                   required
                   min="0"
                   step="0.01"
-                  className="w-full px-4 py-3 bg-zinc-800 border border-zinc-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
                   placeholder="0.00"
+                  className="w-full px-4 py-3 bg-zinc-800 border border-zinc-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
                 />
               </div>
 
+              {/** Image URL */}
               <div>
-                <label htmlFor="image" className="block text-sm font-medium mb-2">
-                  Image URL
-                </label>
+                <label htmlFor="image" className="block text-sm font-medium mb-2">Image URL</label>
                 <input
                   type="url"
                   id="image"
@@ -176,15 +161,14 @@ export default function AddProductPage() {
                   value={formData.image}
                   onChange={handleChange}
                   required
-                  className="w-full px-4 py-3 bg-zinc-800 border border-zinc-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
                   placeholder="https://example.com/image.jpg"
+                  className="w-full px-4 py-3 bg-zinc-800 border border-zinc-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
                 />
               </div>
 
+              {/** Detailed Description */}
               <div>
-                <label htmlFor="details" className="block text-sm font-medium mb-2">
-                  Detailed Description
-                </label>
+                <label htmlFor="details" className="block text-sm font-medium mb-2">Detailed Description</label>
                 <textarea
                   id="details"
                   name="details"
@@ -192,11 +176,12 @@ export default function AddProductPage() {
                   onChange={handleChange}
                   required
                   rows={5}
-                  className="w-full px-4 py-3 bg-zinc-800 border border-zinc-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
                   placeholder="Enter detailed product information"
+                  className="w-full px-4 py-3 bg-zinc-800 border border-zinc-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
                 ></textarea>
               </div>
 
+              {/** Buttons */}
               <div className="flex justify-end space-x-4">
                 <button
                   type="button"
@@ -217,7 +202,6 @@ export default function AddProductPage() {
           </div>
         </div>
       </section>
-
       <Footer />
     </div>
   );

@@ -1,5 +1,6 @@
 "use client";
 import { useSession } from "next-auth/react";
+import Image from "next/image";
 import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -25,9 +26,7 @@ export default function ProductDetailPage() {
       try {
         setLoading(true);
         const response = await fetch(`/api/products/${productId}`);
-        if (!response.ok) {
-          throw new Error(`HTTP error! Status: ${response.status}`);
-        }
+        if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
         const data = await response.json();
         setProduct(data);
       } catch (err) {
@@ -42,9 +41,7 @@ export default function ProductDetailPage() {
       try {
         setRelatedLoading(true);
         const response = await fetch(`/api/products/random?count=3&excludeId=${productId}`);
-        if (!response.ok) {
-          throw new Error(`HTTP error! Status: ${response.status}`);
-        }
+        if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
         const data = await response.json();
         setRelatedProducts(data);
       } catch (err) {
@@ -76,10 +73,7 @@ export default function ProductDetailPage() {
 
     if (result.isConfirmed) {
       try {
-        const response = await fetch(`/api/products/${productId}`, {
-          method: 'DELETE',
-        });
-
+        const response = await fetch(`/api/products/${productId}`, { method: "DELETE" });
         if (response.ok) {
           await Swal.fire({
             title: "Deleted!",
@@ -89,12 +83,12 @@ export default function ProductDetailPage() {
             background: "#18181b",
             color: "#f4f4f5",
           });
-          router.push('/products');
+          router.push("/products");
         } else {
-          throw new Error('Failed to delete product');
+          throw new Error("Failed to delete product");
         }
       } catch (error) {
-        console.error('Error deleting product:', error);
+        console.error("Error deleting product:", error);
         await Swal.fire({
           title: "Error!",
           text: "Failed to delete product. Please try again.",
@@ -118,21 +112,21 @@ export default function ProductDetailPage() {
     );
   }
 
-  if (error) {
+  if (error || !product) {
     return (
       <div className="min-h-screen bg-zinc-900 text-zinc-100">
         <Navbar />
-        <div className="container mx-auto px-4 py-20">
-          <div className="text-center">
-            <h1 className="text-3xl font-bold mb-4">Product Not Found</h1>
-            <p className="text-zinc-400 mb-8">The product you're looking for doesn't exist.</p>
-            <Link
-              href="/products"
-              className="px-6 py-3 bg-indigo-600 hover:bg-indigo-700 rounded-lg font-medium transition-colors"
-            >
-              Back to Products
-            </Link>
-          </div>
+        <div className="container mx-auto px-4 py-20 text-center">
+          <h1 className="text-3xl font-bold mb-4">Product Not Found</h1>
+          <p className="text-zinc-400 mb-8">
+            The product you&apos;re looking for doesn&apos;t exist.
+          </p>
+          <Link
+            href="/products"
+            className="px-6 py-3 bg-indigo-600 hover:bg-indigo-700 rounded-lg font-medium transition-colors"
+          >
+            Back to Products
+          </Link>
         </div>
         <Footer />
       </div>
@@ -150,7 +144,13 @@ export default function ProductDetailPage() {
               href="/products"
               className="inline-flex items-center text-indigo-400 hover:text-indigo-300 transition-colors"
             >
-              <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <svg
+                className="w-5 h-5 mr-2"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+                xmlns="http://www.w3.org/2000/svg"
+              >
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
               </svg>
               Back to Products
@@ -158,17 +158,18 @@ export default function ProductDetailPage() {
           </div>
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
             {/* Product Image */}
-            <div className="bg-zinc-800 rounded-2xl overflow-hidden">
-              <img
-                src={product.image}
+            <div className="bg-zinc-800 rounded-2xl overflow-hidden relative h-96 w-full">
+              <Image
+                src={product.image || "/placeholder.png"}
                 alt={product.name}
-                className="w-full h-full object-cover"
+                fill
+                className="object-cover"
               />
             </div>
             {/* Product Details */}
             <div>
               <h1 className="text-3xl md:text-4xl font-bold mb-4">{product.name}</h1>
-              <p className="text-xl text-indigo-400 font-bold mb-6">${product.price}</p>
+              <p className="text-xl text-indigo-400 font-bold mb-6">${Number(product.price || 0).toFixed(2)}</p>
               <div className="mb-8">
                 <h2 className="text-xl font-semibold mb-3">Description</h2>
                 <p className="text-zinc-300">{product.description}</p>
@@ -184,7 +185,6 @@ export default function ProductDetailPage() {
                 <button className="px-8 py-3 bg-zinc-800 hover:bg-zinc-700 rounded-lg font-medium transition-colors flex-1">
                   Buy Now
                 </button>
-                {/* Only show delete button if the user is the owner */}
                 {isOwner && (
                   <button
                     onClick={handleDeleteProduct}
@@ -193,35 +193,6 @@ export default function ProductDetailPage() {
                     Delete Product
                   </button>
                 )}
-              </div>
-              <div className="mt-8 pt-8 border-t border-zinc-800">
-                <h3 className="text-lg font-semibold mb-4">Key Features</h3>
-                <ul className="space-y-2 text-zinc-300">
-                  <li className="flex items-start">
-                    <svg className="w-5 h-5 text-indigo-400 mr-2 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
-                    </svg>
-                    Premium quality materials
-                  </li>
-                  <li className="flex items-start">
-                    <svg className="w-5 h-5 text-indigo-400 mr-2 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
-                    </svg>
-                    30-day money-back guarantee
-                  </li>
-                  <li className="flex items-start">
-                    <svg className="w-5 h-5 text-indigo-400 mr-2 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
-                    </svg>
-                    Free shipping on orders over $50
-                  </li>
-                  <li className="flex items-start">
-                    <svg className="w-5 h-5 text-indigo-400 mr-2 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
-                    </svg>
-                    1-year warranty included
-                  </li>
-                </ul>
               </div>
             </div>
           </div>
@@ -245,19 +216,25 @@ export default function ProductDetailPage() {
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
               {relatedProducts.map((relatedProduct) => (
-                <div key={relatedProduct._id} className="bg-zinc-800 rounded-2xl overflow-hidden transition-all duration-300 hover:shadow-xl hover:-translate-y-2">
-                  <div className="h-48 overflow-hidden">
-                    <img
-                      src={relatedProduct.image}
+                <div
+                  key={relatedProduct._id}
+                  className="bg-zinc-800 rounded-2xl overflow-hidden transition-all duration-300 hover:shadow-xl hover:-translate-y-2"
+                >
+                  <div className="h-48 relative">
+                    <Image
+                      src={relatedProduct.image || "/placeholder.png"}
                       alt={relatedProduct.name}
-                      className="w-full h-full object-cover transition-transform duration-500 hover:scale-110"
+                      fill
+                      className="object-cover transition-transform duration-500 hover:scale-110"
                     />
                   </div>
                   <div className="p-6">
                     <h3 className="text-xl font-bold mb-2">{relatedProduct.name}</h3>
                     <p className="text-zinc-400 mb-4">{relatedProduct.description}</p>
                     <div className="flex justify-between items-center">
-                      <span className="text-xl font-bold text-indigo-400">${relatedProduct.price}</span>
+                      <span className="text-xl font-bold text-indigo-400">
+                        ${Number(relatedProduct.price || 0).toFixed(2)}
+                      </span>
                       <Link
                         href={`/products/${relatedProduct._id}`}
                         className="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 rounded-lg transition-colors"
@@ -273,7 +250,6 @@ export default function ProductDetailPage() {
         </div>
       </section>
 
-      {/* Footer */}
       <Footer />
     </div>
   );
